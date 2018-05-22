@@ -1,0 +1,75 @@
+---
+
+  - name: JupyterHub | Install dependencies
+    pkg: name="{{item}}" state="present"
+    with_items:
+      - "nodejs-legacy"
+      - "npm"
+    when: jupyterhub_nodejs == "legacy"
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | npm configurable-http-proxy
+    npm: name=configurable-http-proxy global=yes state=present
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | create jupyter group
+    group: name=jupyter state=present
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | create jupyter user
+    user: name=jupyter state=present groups=jupyter,shadow
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | create jupyter config folder
+    file: path=/etc/jupyterhub state=directory mode=0755 owner=jupyter group=jupyter
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | allow sudoer for jupyter command
+    templates: src="{{role_dir}}/templates/jupyter_sudoers_d.j2" dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | install components
+    pip: executable=pip3 name="{{item}}" extra_args='--upgrade'
+    with_items:
+      - "jupyter"
+      - "jupyterhub"
+      - "sudospawner"
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Check initialized
+    shell: test -e  /etc/jupyterhub/jupyterhub_config.py
+    become: yes
+    ignore_errors: true
+    register: config_present
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Configure
+    shell: "/usr/local/bin/jupyterhub --generate-config"
+    args:
+       chdir: /etc/jupyterhub/
+       creates: /etc/jupyterhub/jupyterhub_config.py
+    when: config_present is failed
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Patch basic settings /etc/jupyterhub/jupyterhub_config.py
+    lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
+    with_items: "{{jupyterhub_properties | default([])}}"
+    become: yes
+      tags:
+        - jupyterhub
