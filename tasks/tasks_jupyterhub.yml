@@ -34,7 +34,7 @@
       - jupyterhub
 
   - name: JupyterHub | allow sudoer for jupyter command
-    templates: src="{{role_dir}}/templates/jupyter_sudoers_d.j2" dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
+    template: src="{{role_dir}}/templates/jupyter_sudoers_d.j2" dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
     become: yes
     tags:
       - jupyterhub
