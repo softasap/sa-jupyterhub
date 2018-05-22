@@ -70,6 +70,7 @@
   - name: JupyterHub | Patch basic settings /etc/jupyterhub/jupyterhub_config.py
     lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
     with_items: "{{jupyterhub_properties | default([])}}"
+    when: docker_test is not defined
     become: yes
     tags:
       - jupyterhub
