@@ -1,0 +1,15 @@
+[Unit]
+Description=Jupyterhub
+After=syslog.target network.target
+
+[Service]
+User=jupyter
+Environment="PATH={{jupyterhub_python_base_dir}}/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+Environment="HOME=/home/jupyter"
+Environment="ANACONDA_DIR={{anaconda_current_dir}}"
+Environment="JPY_COOKIE_SECRET=\"$(openssl rand -hex 1024)\""
+WorkingDirectory=/home/jupyter
+ExecStart={{jupyterhub_python_base_dir}}/bin/jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner -f /etc/jupyterhub/jupyterhub_config.py
+
+[Install]
+WantedBy=multi-user.target

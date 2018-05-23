@@ -1,5 +1,5 @@
 ---
-  #  sa-python-anaconda v 1.1.0
+  #  sa-python-anaconda v 1.2.0
   - name: Anaconda | check for install
     shell: "test -e {{anaconda_current_dir}}/bin/conda"
     ignore_errors: true
@@ -19,6 +19,28 @@
 
     - name: Anaconda | execute web install
       shell: "/tmp/anaconda_installer.sh -b -p {{anaconda_install_dir}}"
+      become: yes
+      tags:
+        - anaconda
+
+
+    - name: Anaconda | create anaconda_group group if provided
+      group: name="{{anaconda_group}}" state=present
+      when: anaconda_group is defined
+      become: yes
+      tags:
+        - jupyterhub
+
+
+    - name: Anaconda | Reset rights, group owner
+      shell: "chown -R root:{{anaconda_group | default('root')}} {{anaconda_install_dir}}"
+      when: anaconda_group is defined
+      become: yes
+      tags:
+        - anaconda
+
+    - name: Anaconda | Reset rights, group write
+      shell: chmod -R g+w {{anaconda_install_dir}}
       become: yes
       tags:
         - anaconda
