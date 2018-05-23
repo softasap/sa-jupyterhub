@@ -24,6 +24,12 @@
     tags:
       - jupyterhub
 
+  - name: JupyterHub | create jupyter sqllitedb folder
+    file: path=/etc/jupyterhub/db state=directory owner=jupyter group=jupyter mode="u=rwx,g=rwx,o="
+    become: yes
+    tags:
+      - jupyterhub
+
   - name: JupyterHub | allow sudoer for jupyter command
     template: src="{{role_dir}}/templates/jupyter_sudoers_d.j2" dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
     become: yes

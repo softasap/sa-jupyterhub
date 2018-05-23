@@ -1,3 +1,4 @@
+# sa-node 1.4.0
   - name: NodeJS | Check if is present
     command: test -x /usr/bin/node
     when: ansible_system == "Linux"
