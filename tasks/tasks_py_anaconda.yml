@@ -23,8 +23,18 @@
       tags:
         - anaconda
 
+
+    - name: Anaconda | create anaconda_group group if provided
+      group: name="{{anaconda_group}}" state=present
+      when: anaconda_group is defined
+      become: yes
+      tags:
+        - jupyterhub
+
+
     - name: Anaconda | Reset rights, group owner
-      shell: chown -R root:{{anaconda_group | default('root')}} {{anaconda_install_dir}}
+      shell: "chown -R root:{{anaconda_group | default('root')}} {{anaconda_install_dir}}"
+      when: anaconda_group is defined
       become: yes
       tags:
         - anaconda
