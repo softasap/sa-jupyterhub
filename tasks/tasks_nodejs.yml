@@ -82,7 +82,7 @@
 
   - name: NodeJS | Self update npm to most recent one
     shell: npm install -g npm
-    when: node_present is failed and option_install_default_packages
+    when: node_present is failed and option_install_default_packages | default(False)
     become: yes
     tags:
        -nodejs
@@ -91,7 +91,7 @@
 
   - name: NodeJS | Install gulp, bower, grunt, grunt-cli tools tool
     shell: "npm install -g {{ item }}"
-    when: node_present is failed and option_install_default_packages
+    when: node_present is failed and option_install_default_packages | default(False)
     with_items:
       - gulp
       - bower
