@@ -5,6 +5,8 @@ After=syslog.target network.target
 [Service]
 User=jupyter
 Environment="PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:{{jupyterhub_python_base_dir}}/bin"
+Environment="HOME=/home/jupyter"
+WorkingDirectory=/home/jupyter
 ExecStart={{jupyterhub_python_base_dir}}/bin/jupyterhub --JupyterHub.spawner_class=sudospawner.SudoSpawner -f /etc/jupyterhub/jupyterhub_config.py
 
 [Install]

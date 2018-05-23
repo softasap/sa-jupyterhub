@@ -4,6 +4,12 @@ sa-jupyterhub
 [![Build Status](https://travis-ci.org/softasap/sa-jupyterhub.svg?branch=master)](https://travis-ci.org/softasap/sa-jupyterhub)
 
 
+Add users working with jupyterhub to jupyter group
+```shell
+sudo usermod -a -G jupyter userName
+```
+
+
 Example of usage:
 
 Simple
@@ -23,6 +29,42 @@ Advanced
 
      - {
          role: "sa-jupyterhub",
+
+         option_install_python2: True,
+         option_install_python3: True,
+         option_install_anaconda: True,
+
+         option_install_git: True,
+
+         jupyterhub_python: "anaconda",  # python3 / anaconda
+         option_install_nodejs_legacy: True,
+
+         jupyterhub_properties:
+           - {regexp: "^c.Authenticator.admin_users*", line: "c.Authenticator.admin_users = {'jupyter'}"}
+           - {regexp: "^c.LocalAuthenticator.create_system_users*", line: "c.LocalAuthenticator.create_system_users = True"}
+           - {regexp: "^c.JupyterHub.confirm_no_ssl*", line: "c.JupyterHub.confirm_no_ssl = True"}
+           # - {regexp: "^c.JupyterHub.hub_ip*", line: "c.JupyterHub.hub_ip = '{{ jupyterhub_ip }}'"}
+           # - {regexp: "^c.JupyterHub.ip*", line: "c.JupyterHub.ip = '{{ jupyterhub_ip }}'"}
+           # - {regexp: "^c.JupyterHub.proxy_api_ip*", line: "c.JupyterHub.proxy_api_ip = '{{ jupyterhub_ip }}'"}
+
+         jupyterhub_ip: "{{ansible_default_ipv4.address}}",
+
+         # ANACONDA
+         anaconda_version: '5.1.0',
+         anaconda_python: 3, # 2|3
+
+         option_anaconda_addtoprofile: False,
+         option_anaconda_update_packages: True,
+
+         anaconda_base_dir: /usr/local,
+         anaconda_additional_packages: [],
+         # /ANACONDA
+         # PYTHON 3
+
+         python_version: "3.6.4"
+
+         # /PYTHON 3
+
        }
 
 
@@ -73,4 +115,4 @@ Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
 
 Discover other roles at  http://www.softasap.com/roles/registry_generated.html
 
-visit our blog at http://www.softasap.com/blog/archive.html 
+visit our blog at http://www.softasap.com/blog/archive.html

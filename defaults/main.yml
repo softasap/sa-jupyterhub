@@ -15,10 +15,10 @@ option_install_nodejs_legacy: True
 jupyterhub_properties:
   - {regexp: "^c.Authenticator.admin_users*", line: "c.Authenticator.admin_users = {'jupyter'}"}
   - {regexp: "^c.LocalAuthenticator.create_system_users*", line: "c.LocalAuthenticator.create_system_users = True"}
-  - {regexp: "^c.JupyterHub.hub_ip*", line: "c.JupyterHub.hub_ip = '{{ jupyterhub_ip }}'"}
-  - {regexp: "^c.JupyterHub.ip*", line: "c.JupyterHub.ip = '{{ jupyterhub_ip }}'"}
-  - {regexp: "^c.JupyterHub.proxy_api_ip*", line: "c.JupyterHub.proxy_api_ip = '{{ jupyterhub_ip }}'"}
   - {regexp: "^c.JupyterHub.confirm_no_ssl*", line: "c.JupyterHub.confirm_no_ssl = True"}
+  # - {regexp: "^c.JupyterHub.hub_ip*", line: "c.JupyterHub.hub_ip = '{{ jupyterhub_ip }}'"}
+  # - {regexp: "^c.JupyterHub.ip*", line: "c.JupyterHub.ip = '{{ jupyterhub_ip }}'"}
+  # - {regexp: "^c.JupyterHub.proxy_api_ip*", line: "c.JupyterHub.proxy_api_ip = '{{ jupyterhub_ip }}'"}
 
 
 jupyterhub_python_base_dir: /usr/local
