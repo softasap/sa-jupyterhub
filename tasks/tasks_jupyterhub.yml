@@ -1,15 +1,5 @@
 ---
 
-  - name: JupyterHub | Install dependencies
-    package: name="{{item}}" state="present"
-    with_items:
-      - "nodejs-legacy"
-      - "npm"
-    become: yes
-    when: option_install_nodejs_legacy
-    tags:
-      - jupyterhub
-
   - name: JupyterHub | npm configurable-http-proxy
     npm: name=configurable-http-proxy global=yes state=present
     become: yes

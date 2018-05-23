@@ -4,7 +4,10 @@
 
   vars:
     - root_dir: ..
-
+    - box_option_install_python2: False
+    - box_option_install_git: False
+    - box_option_install_python3: False
+    - box_option_install_anaconda: False
 
   pre_tasks:
     - debug: msg="Pre tasks section"
@@ -23,8 +26,10 @@
   roles:
      - {
          role: "sa-jupyterhub",
-         option_install_python2: True,
-         option_install_git: True,
+         option_install_python2: "{{box_option_install_python2}}",
+         option_install_git: "{{box_option_install_git}}",
+         option_install_python3: "{{box_option_install_python3}}",
+         option_install_anaconda: "{{box_option_install_anaconda}}",
          jupyterhub_python: "anaconda",  # python3 / anaconda / # derived
          jupyterhub_nodejs: "legacy", # derived
          jupyterhub_ip: "{{box_address}}"
