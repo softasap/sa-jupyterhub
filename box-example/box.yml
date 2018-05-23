@@ -22,11 +22,15 @@
 
   roles:
      - {
-         role: "sa-jupyterhub"    
+         role: "sa-jupyterhub",
+         option_install_python2: True,
+         option_install_git: True,
+         jupyterhub_python: "anaconda",  # python3 / anaconda / # derived
+         jupyterhub_nodejs: "legacy", # derived
+         jupyterhub_ip: "{{box_address}}"
        }
 
 
   tasks:
 
     - debug: msg="Tasks section"
-
