@@ -11,14 +11,14 @@ option_install_git: True
 jupyterhub_python: "anaconda"  # python3 / anaconda
 
 option_install_nodejs: True
-nodejs_version: "4.x" # 0.10 0.12 4.x 5.x 6.x 7.x
+nodejs_version: "6.x" # 0.10 0.12 4.x 5.x 6.x 7.x
 
 jupyterhub_properties:
   - {regexp: "^c.Authenticator.admin_users*", line: "c.Authenticator.admin_users = {'jupyter'}"}
   - {regexp: "^c.LocalAuthenticator.create_system_users*", line: "c.LocalAuthenticator.create_system_users = True"}
   - {regexp: "^c.JupyterHub.confirm_no_ssl*", line: "c.JupyterHub.confirm_no_ssl = True"}
   - {regexp: "^c.JupyterHub.cookie_secret*", line: "c.JupyterHub.cookie_secret = bytes.fromhex('{{jupyterhub_cookie_secret}}')"}
-  - {regexp: "^c.JupyterHub.db_url*", line: "c.JupyterHub.db_url = '/etc/jupyterhub/db/jupyterhub.sqlite'"}  
+  - {regexp: "^c.JupyterHub.db_url*", line: "c.JupyterHub.db_url = '/etc/jupyterhub/db/jupyterhub.sqlite'"}
 
 
   # - {regexp: "^c.JupyterHub.hub_ip*", line: "c.JupyterHub.hub_ip = '{{ jupyterhub_ip }}'"}
@@ -43,6 +43,7 @@ anaconda_name : 'Anaconda{{anaconda_python}}-{{anaconda_version}}-{{anaconda_dis
 
 option_anaconda_addtoprofile: False
 option_anaconda_update_packages: True
+anaconda_group: jupyter
 
 anaconda_base_dir: /usr/local
 anaconda_install_dir: '{{anaconda_base_dir}}/{{anaconda_name}}'

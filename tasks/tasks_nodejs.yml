@@ -74,7 +74,10 @@
        -setup
 
   - name: NodeJS | Install default Node.js 4.x 5.x 6.X 7.X family
-    apt: pkg=nodejs state=installed update_cache=yes
+    apt: pkg="{{item}}" state=installed update_cache=yes
+    with_items:
+      - nodejs
+      - npm
     become: yes
     when: ansible_os_family == "Debian" and nodejs_version not in [ "0.10", "0.12" ]  and node_present is failed
     tags:

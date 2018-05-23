@@ -23,6 +23,18 @@
       tags:
         - anaconda
 
+    - name: Anaconda | Reset rights, group owner
+      shell: chown -R root:{{anaconda_group | default('root')}} {{anaconda_install_dir}}
+      become: yes
+      tags:
+        - anaconda
+
+    - name: Anaconda | Reset rights, group write
+      shell: chmod -R g+w {{anaconda_install_dir}}
+      become: yes
+      tags:
+        - anaconda
+
     - name: Anaconda | Link current
       file: src="{{anaconda_install_dir}}" dest="{{anaconda_current_dir}}" state=link
       become: yes
