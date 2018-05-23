@@ -1,5 +1,5 @@
 ---
-  #  sa-python-anaconda v 1.1.0
+  #  sa-python-anaconda v 1.2.0
   - name: Anaconda | check for install
     shell: "test -e {{anaconda_current_dir}}/bin/conda"
     ignore_errors: true

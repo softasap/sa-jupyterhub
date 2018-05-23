@@ -77,12 +77,22 @@
     apt: pkg="{{item}}" state=installed update_cache=yes
     with_items:
       - nodejs
-      - npm
     become: yes
     when: nodejs_version not in [ "0.10", "0.12" ]  and node_present is failed
     tags:
        -nodejs
        -setup
+
+  - name: NodeJS | Install default npm 6.X 7.X ... family
+    apt: pkg="{{item}}" state=present update_cache=yes
+    with_items:
+      - npm
+    become: yes
+    when: nodejs_version in [ "6.x", "7.x", "8.x" ] and ansible_distribution_release in ["bionic"] and node_present is failed
+    tags:
+       -nodejs
+       -setup
+
 
   - name: NodeJS | Self update npm to most recent one
     shell: npm install -g npm
