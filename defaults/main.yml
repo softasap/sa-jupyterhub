@@ -11,7 +11,7 @@ option_install_git: True
 jupyterhub_python: "anaconda"  # python3 / anaconda
 
 option_install_nodejs: True
-nodejs_version: "4.x" # 0.10 0.12 4.x 5.x 6.x 7.x
+nodejs_version: "6.x" # 0.10 0.12 4.x 5.x 6.x 7.x
 
 jupyterhub_properties:
   - {regexp: "^c.Authenticator.admin_users*", line: "c.Authenticator.admin_users = {'jupyter'}"}
