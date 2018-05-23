@@ -4,10 +4,12 @@
 role_dir: "{{role_path}}"
 
 option_install_python2: True
+option_install_python3: True
+option_install_anaconda: True
 
 option_install_git: True
 
-jupyterhub_python: "python3"  # python3 / anaconda
+jupyterhub_python: "anaconda"  # python3 / anaconda
 option_install_nodejs_legacy: True
 
 jupyterhub_properties:
