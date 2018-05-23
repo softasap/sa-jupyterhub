@@ -28,6 +28,12 @@ Advanced
 
 ```
 
+Credits:
+
+If you install anaconda favor of python3, 3rd party module is used to manage packages there:
+
+conda module for python:  https://github.com/UDST/ansible-conda , see License for module under library/License.txt
+
 
 
 Usage with ansible galaxy workflow

@@ -5,7 +5,8 @@
     with_items:
       - "nodejs-legacy"
       - "npm"
-    when: jupyterhub_nodejs == "legacy"
+    become: yes
+    when: option_install_nodejs_legacy
     tags:
       - jupyterhub
 
@@ -40,7 +41,7 @@
       - jupyterhub
 
   - name: JupyterHub | install components
-    pip: executable=pip3 name="{{item}}" extra_args='--upgrade'
+    pip: executable="{{ jupyterhub_pip | default('/usr/local/bin/pip3') }}" name="{{item}}" extra_args='--upgrade'
     with_items:
       - "jupyter"
       - "jupyterhub"
@@ -58,7 +59,7 @@
       - jupyterhub
 
   - name: JupyterHub | Configure
-    shell: "/usr/local/bin/jupyterhub --generate-config"
+    shell: "{{jupyterhub_python_base_dir}}/bin/jupyterhub --generate-config"
     args:
        chdir: /etc/jupyterhub/
        creates: /etc/jupyterhub/jupyterhub_config.py
@@ -71,6 +72,41 @@
     lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py  regexp="{{item.regexp}}" line="{{item.line}}" insertafter="{{item.insertafter | default('EOF')}}"
     with_items: "{{jupyterhub_properties | default([])}}"
     when: docker_test is not defined
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Template startup (init, template)
+    template: src="{{role_dir}}/templates/jupyterhub_init.j2"  dest="/etc/init.d/jupyterhub" mode="u=rwx,g=rx,o=rx"
+    when: ansible_service_mgr == "init"
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Template startup (init, startup)
+    shell:  update-rc.d jupyterhub defaults
+    when: ansible_service_mgr == "init"
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Template startup (systemd)
+    template: src="{{role_dir}}/templates/jupyterhub.systemd.j2" dest="/etc/systemd/system/jupyterhub.service"
+    when: ansible_service_mgr == "systemd"
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | reload systemd
+    command: systemctl daemon-reload
+    when: ansible_service_mgr == "systemd"
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | Start and Enable Service
+    service: name="jupyterhub" enabled="yes" state="started"
+    when: ansible_service_mgr == "systemd"
     become: yes
     tags:
       - jupyterhub
