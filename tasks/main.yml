@@ -14,6 +14,17 @@
       jupyterhub_pip: "{{ anaconda_current_dir }}/bin/pip"
     when: jupyterhub_python == "anaconda"
 
+  - name: JupyterHub | create jupyter group
+    group: name=jupyter state=present
+    become: yes
+    tags:
+      - jupyterhub
+
+  - name: JupyterHub | create jupyter user
+    user: name=jupyter state=present groups=jupyter,shadow
+    become: yes
+    tags:
+      - jupyterhub
 
   - include: tasks_nodejs.yml
     when: option_install_nodejs
