@@ -1,15 +1,17 @@
 ---
 # tasks file for sa-jupyterhub
-  - set_fact:
+  - name: Set installation facts for python3
+    set_fact:
       jupyterhub_python_base_dir: /usr/local
       jupyterhub_python_interpreter: /usr/local/bin/python3
       jupyterhub_pip: /usr/local/bin/pip3
     when: jupyterhub_python == "python3"
 
-  - set_fact:
-      jupyterhub_python_base_dir: "{{anaconda_current_dir}}"
-      jupyterhub_python_interpreter: "{{anaconda_current_dir}}/bin/python"
-      jupyterhub_pip: "{{anaconda_current_dir}}/bin/pip"
+  - name: Set installation facts for anaconda
+    set_fact:
+      jupyterhub_python_base_dir: "{{ anaconda_current_dir }}"
+      jupyterhub_python_interpreter: "{{ anaconda_current_dir }}/bin/python"
+      jupyterhub_pip: "{{ anaconda_current_dir }}/bin/pip"
     when: jupyterhub_python == "anaconda"
 
 

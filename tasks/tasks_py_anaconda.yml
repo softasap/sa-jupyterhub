@@ -1,8 +1,9 @@
 ---
   #  sa-python-anaconda v 1.2.0
   - name: Anaconda | check for install
-    shell: "test -e {{anaconda_current_dir}}/bin/conda"
+    command: "test -e {{ anaconda_current_dir }}/bin/conda"
     ignore_errors: true
+    changed_when: False
     register: anaconda_installed
     tags:
       - anaconda
@@ -11,42 +12,33 @@
 
     - name: Anaconda | get web install
       get_url:
-        url: 'https://repo.continuum.io/archive/{{anaconda_name}}.sh'
+        url: 'https://repo.continuum.io/archive/{{ anaconda_name }}.sh'
         dest: /tmp/anaconda_installer.sh
         mode: 0755
       tags:
         - anaconda
 
     - name: Anaconda | execute web install
-      shell: "/tmp/anaconda_installer.sh -b -p {{anaconda_install_dir}}"
+      command: "/tmp/anaconda_installer.sh -b -p {{ anaconda_install_dir }}"
       become: yes
       tags:
         - anaconda
 
-
-    - name: Anaconda | create anaconda_group group if provided
-      group: name="{{anaconda_group}}" state=present
-      when: anaconda_group is defined
-      become: yes
-      tags:
-        - jupyterhub
-
-
     - name: Anaconda | Reset rights, group owner
-      shell: "chown -R root:{{anaconda_group | default('root')}} {{anaconda_install_dir}}"
-      when: anaconda_group is defined
+      file: dest="{{ anaconda_install_dir }}" owner=root group="{{ anaconda_group | default('root') }}" recurse=yes
       become: yes
       tags:
         - anaconda
 
     - name: Anaconda | Reset rights, group write
-      shell: chmod -R g+w {{anaconda_install_dir}}
+      command: chmod -R g+w {{ anaconda_install_dir }}
       become: yes
       tags:
         - anaconda
+        - skip_ansible_lint
 
     - name: Anaconda | Link current
-      file: src="{{anaconda_install_dir}}" dest="{{anaconda_current_dir}}" state=link
+      file: src="{{ anaconda_install_dir }}" dest="{{ anaconda_current_dir }}" state=link
       become: yes
       tags:
         - anaconda
@@ -55,7 +47,7 @@
     when: anaconda_installed is failed
 
   - name: Anaconda | Update packages
-    shell: "{{anaconda_current_dir}}/bin/conda update -y --all"
+    command: "{{ anaconda_current_dir }}/bin/conda update -y --all"
     when: option_anaconda_update_packages
     become: yes
     tags:
@@ -69,7 +61,10 @@
       - anaconda
 
   - name: Anaconda | add to profile
-    template: src="{{role_dir}}/templates/anaconda_profile.sh.j2" dest="/etc/profile.d/anaconda_profile.sh" mode="0644"
+    template:
+      src: "{{ role_dir }}/templates/anaconda_profile.sh.j2"
+      dest: "/etc/profile.d/anaconda_profile.sh"
+      mode: "0644"
     when:  option_anaconda_addtoprofile
     become: yes
     tags:
@@ -78,5 +73,5 @@
   - name: Anaconda | install additional packages
     conda: name="{{ item }}" state=present executable="{{ anaconda_conda_bin }}"
     changed_when: not (conda_install_result.stdout | search('All requested packages already installed'))
-    with_items: "{{anaconda_additional_packages | default([])}}"
+    with_items: "{{ anaconda_additional_packages | default([]) }}"
     register: conda_install_result
