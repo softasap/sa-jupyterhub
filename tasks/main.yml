@@ -26,9 +26,6 @@
     tags:
       - jupyterhub
 
-  - include: tasks_nodejs.yml
-    when: option_install_nodejs
-
   - include: tasks_python.yml
     when: option_install_python2
 
@@ -40,5 +37,8 @@
 
   - include_tasks: tasks_py_anaconda.yml
     when: option_install_anaconda
+
+  - include: tasks_nodejs.yml
+    when: option_install_nodejs
 
   - include_tasks: tasks_jupyterhub.yml

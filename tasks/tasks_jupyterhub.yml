@@ -2,7 +2,6 @@
 
   - name: JupyterHub | npm configurable-http-proxy
     npm: name=configurable-http-proxy global=yes state=present
-    ignore_errors: true
     become: yes
     tags:
       - jupyterhub
