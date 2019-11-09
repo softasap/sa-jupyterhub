@@ -24,7 +24,7 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - trusty
-        - xenial 
+        - xenial
         - bionic
   galaxy_tags:
     - python
