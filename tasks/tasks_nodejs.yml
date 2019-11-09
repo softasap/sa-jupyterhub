@@ -131,7 +131,6 @@
 
   - name: NodeJS | Check if npm is present
     command: test -x /usr/bin/npm
-    when: ansible_system == "Linux"
     ignore_errors: yes
     register: npm_present
     changed_when: False
