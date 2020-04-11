@@ -2,8 +2,13 @@
 - name: Prepare
   hosts: all
   gather_facts: false
-  tasks:
-    - name: Install python for Ansible
+  pre_tasks:
+    - name: Install python for Ansible (at this scenario we do expect python2 on a host still, (issues with apt module in py 3.7))
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       become: true
       changed_when: false
+
+    - name: gather facts
+      setup:
+
+

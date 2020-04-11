@@ -13,6 +13,7 @@
     - name: Anaconda | get web install
       get_url:
         url: 'https://repo.continuum.io/archive/{{ anaconda_name }}.sh'
+            # https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh
         dest: /tmp/anaconda_installer.sh
         mode: 0755
       tags:
@@ -53,6 +54,11 @@
     tags:
       - anaconda
 
+  - name: Ensure python3-distutils present
+    command: "{{ anaconda_current_dir }}/bin/conda install -c anaconda setuptools"
+    become: yes
+    tags:
+      - anaconda
 
   - name: Anaconda | workaround curl conflict
     conda: name=curl state=absent  executable="{{ anaconda_conda_bin }}"

@@ -7,7 +7,14 @@ sa-jupyterhub
 Add users working with jupyterhub to jupyter group
 ```shell
 sudo usermod -a -G jupyter userName
+
+# i.e.
+sudo usermod -a -G jupyter vagrant
+sudo usermod -a -G jupyter ubuntu
 ```
+
+if user is not allowed to work with Jupyterhub, system will not be able to start session for that user, althouth error message
+might be misleading, for example 'Anaconda Error in Authenticator.pre_spawn_start: ValueError substring not found'
 
 
 Example of usage:
@@ -76,6 +83,110 @@ If you install anaconda favor of python3, 3rd party module is used to manage pac
 
 conda module for python:  https://github.com/UDST/ansible-conda , see License for module under library/License.txt
 
+
+Install custom kernels
+----------------------
+
+1. Login as jupyter user
+
+```
+$ whoami
+jupyter
+```
+
+2. List available kernels
+
+```
+jupyter kernelspec list
+```
+
+3.1 Create new kernel using conda
+
+Note: you might need to prepare your shell for usage with conda by invoking
+
+```
+conda init <SHELL_NAME>
+```
+
+
+```
+/usr/local/anaconda/bin/conda search "^python$"
+...
+python                         3.8.2      h191fe78_0  pkgs/main
+python                         3.8.2      hcf32534_0  pkgs/main
+```
+
+choose python version and create virtual environment
+
+```
+/usr/local/anaconda/bin/conda create -n Anaconda3.6 python=3.6 anaconda
+```
+
+once created, activate previously created environment
+
+```
+conda activate Anaconda3.6
+```
+
+make sure env is activated and install ipykernel
+
+```
+(Anaconda3.6) jupyter@bionic:~$ pip install ipykernel
+```
+
+Register Anaconda3.6 for use on your jupyter notebooks:
+
+```
+python -m ipykernel install --user --name Anaconda3.6 --display-name  "Python 3.6 - anaconda venv"
+Installed kernelspec Anaconda3.6 in /home/jupyter/.local/share/jupyter/kernels/anaconda3.6
+```
+
+you are done:
+
+```
+ jupyter kernelspec list
+Available kernels:
+  anaconda3.6    /home/jupyter/.local/share/jupyter/kernels/anaconda3.6
+  python3        /usr/local/share/jupyter/kernels/python3
+```
+
+Note, that kernel registration is nothing more as json file `cat /home/vagrant/.local/share/jupyter/kernels/anaconda3.6/kernel.json`
+
+```json
+
+{
+ "argv": [
+  "/home/vagrant/.conda/envs/Anaconda3.6/bin/python",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Python 3.6 - anaconda venv",
+ "language": "python"
+}
+```
+
+you can have kernels installed for your own user, or for all users, than definition should land in
+`/usr/local/share/jupyter/kernels/` and you should do appropriate rights arrangements (i.e. write for `jupyter` group)
+
+
+
+
+3.2 Install ansible kernel
+
+```
+pip install ansible-kernel
+python -m ansible_kernel.install
+
+```
+
+or
+
+```
+pip install ansible-kernel
+python -m ansible_kernel.install --sys-prefix
+```
 
 
 Usage with ansible galaxy workflow
