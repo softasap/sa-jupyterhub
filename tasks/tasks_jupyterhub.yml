@@ -37,11 +37,13 @@
       - jupyterhub
 
   - name: JupyterHub | install components
-    pip: executable="{{ jupyterhub_pip | default('/usr/local/bin/pip3') }}" name="{{ item }}" extra_args='--upgrade'
-    with_items:
-      - "jupyter"
-      - "jupyterhub"
-      - "sudospawner"
+    pip:
+       executable: "{{ jupyterhub_pip | default('/usr/local/bin/pip3') }}"
+       extra_args: '--upgrade'
+       name:
+        - "jupyter"
+        - "jupyterhub"
+        - "sudospawner"
     become: yes
     tags:
       - jupyterhub
