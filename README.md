@@ -183,9 +183,11 @@ python -m ansible_kernel.install
 
 or
 
+for conda
+
 ```
-pip install ansible-kernel
-python -m ansible_kernel.install --sys-prefix
+/usr/local/anaconda/bin/pip install ansible-kernel
+/usr/local/anaconda/bin/python -m ansible_kernel.install --sys-prefix
 ```
 
 

@@ -55,7 +55,7 @@
       - anaconda
 
   - name: Ensure python3-distutils present
-    command: "{{ anaconda_current_dir }}/bin/conda install -c anaconda setuptools"
+    command: "{{ anaconda_current_dir }}/bin/conda install -y -c anaconda setuptools"
     become: yes
     tags:
       - anaconda

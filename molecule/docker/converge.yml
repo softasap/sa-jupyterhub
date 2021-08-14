@@ -10,6 +10,18 @@
     - debug: var="role_under_test"
     - debug: var="ansible_os_family"
 
+    - name: Update packages
+      apt: update_cache=yes
+      when: ansible_pkg_mgr=="apt"
+
+    - name: Update packages
+      dnf: update_cache=yes
+      when: ansible_pkg_mgr=="dnf"
+
+    - name: Update packages
+      yum: update_cache=yes
+      when: ansible_pkg_mgr=="yum"
+
     - name: Update and upgrade apt packages
       apt:
         upgrade: no
